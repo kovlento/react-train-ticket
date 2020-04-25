@@ -9,10 +9,19 @@ import DepartDate from './DepartDate.jsx'
 import HighSpeed from './HighSpeed.jsx'
 import Submit from './Submit.jsx'
 
-import { exchangeFromTo, showCitySelector } from './actions'
+import CitySelector from '../common/CitySelector.jsx'
+
+import { exchangeFromTo, showCitySelector, hideCitySelector } from './actions'
 
 function App(props) {
-  const { from, to, dispatch } = props
+  const {
+    from,
+    to,
+    isCitySelectorVisible,
+    cityData,
+    isLoadingCityData,
+    dispatch,
+  } = props
   const onBack = useCallback(() => {
     window.history.back()
   }, [])
@@ -27,6 +36,10 @@ function App(props) {
     )
   }, [])
 
+  const citySelectorCbs = useMemo(() => {
+    return bindActionCreators({ onBack: hideCitySelector }, dispatch)
+  }, [])
+
   return (
     <div>
       <div className="header-wrapper">
@@ -35,6 +48,12 @@ function App(props) {
       <form className="form">
         <Journey from={from} to={to} {...cbs} />
       </form>
+      <CitySelector
+        show={isCitySelectorVisible}
+        cityData={cityData}
+        isLoading={isLoadingCityData}
+        {...citySelectorCbs}
+      />
     </div>
   )
 }
